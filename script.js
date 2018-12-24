@@ -1,8 +1,6 @@
 var apiKey = "2ac5382f413686e3d4abf62a926b20ff88b74dd5"
 var baseUrl = "https://api.jcdecaux.com/vls/v1"
 
-//var contract = {name:"Marseille"}
-//var contract = {name:"Bruxelles-Capitale"}
 var contract = {
 	name: "Lyon"
 }
@@ -32,6 +30,7 @@ async function main() {
 	var pager = _('.pager')
 	document.body.appendChild(pager)
 	// get information about current contract
+	contract.name = (new URL(window.location.href)).searchParams.get("city") || "Lyon"
 	var contracts = JSON.parse(await ajaxGET(baseUrl + "/contracts?&apiKey=" + apiKey))
 
 	for (tmpContract of contracts) {
