@@ -176,8 +176,8 @@ async function main() {
 				_('p',_("span#dcurrent","...")," vélos disponibles"),
 				_('form',
 					_('input[name="id" id="dnumber" type="hidden"]'),
-					_("p",_('input[name="name" id="name" type="text"]'),_('label[for="name"]','Nom :')),
-					_("p",_('input[name="surname" id="surname" type="text"]'),_('label[for="surname"]','Prénom :')),
+					_("p",_('label[for="name"]','Nom :'),_('input[name="name" id="name" type="text"]')),
+					_("p",_('label[for="surname"]','Prénom :'),_('input[name="surname" id="surname" type="text"]')),
 					_('input[name="sign" type="hidden"]'),
 					_('input[value="Réserver" type="submit"]')
 				)
