@@ -39,7 +39,7 @@ body .pager {
   display: grid;
   grid-template: "carousel ." "map detail" "booking .";
   grid-template-rows: 100vh 100vh 100vh;
-  grid-template-columns: 100vw 400px;
+  grid-template-columns: 100vw 50vw;
   transition: all 1s;
 }
 body .pager .page {
@@ -73,7 +73,7 @@ body .pager #details {
   transition: all 0.5s;
 }
 body .pager #details.open {
-  left: -400px;
+  left: -50vw;
 }
 body .pager #booking {
   grid-area: booking;

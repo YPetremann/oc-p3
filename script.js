@@ -82,6 +82,22 @@ async function main() {
 				map,
 			)
 		)
+		pager.appendChild(
+			_('section#details.page',
+				_('header', _('h2.hidden', 'Details')),
+				_('p#dname', '...'),
+				_('p', 'Adresse : ',_("span #daddress","...")),
+				_('p',_("span#dsize","...")," places"),
+				_('p',_("span#dcurrent","...")," vélos disponibles"),
+				_('form',
+					_('input[name="id" id="dnumber" type="hidden"]'),
+					_("p",_('label[for="name"]','Nom :'),_('input[name="name" id="name" type="text"]')),
+					_("p",_('label[for="surname"]','Prénom :'),_('input[name="surname" id="surname" type="text"]')),
+					_('input[name="sign" type="hidden"]'),
+					_('input[value="Réserver" type="submit"]')
+				)
+			)
+		)
 		var icon_100 = L.icon({
 			iconUrl: 'velo-100.png',
 			iconSize: [25, 41],
@@ -167,22 +183,6 @@ async function main() {
 		mymap.fitBounds(coords)
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
 
-		pager.appendChild(
-			_('section#details.page',
-				_('header', _('h2.hidden', 'Details')),
-				_('p#dname', '...'),
-				_('p', 'Adresse : ',_("span #daddress","...")),
-				_('p',_("span#dsize","...")," places"),
-				_('p',_("span#dcurrent","...")," vélos disponibles"),
-				_('form',
-					_('input[name="id" id="dnumber" type="hidden"]'),
-					_("p",_('label[for="name"]','Nom :'),_('input[name="name" id="name" type="text"]')),
-					_("p",_('label[for="surname"]','Prénom :'),_('input[name="surname" id="surname" type="text"]')),
-					_('input[name="sign" type="hidden"]'),
-					_('input[value="Réserver" type="submit"]')
-				)
-			)
-		)
 		pager.appendChild(
 			_('section#booking.page',
 				_('header', _('h2.hidden', 'Reservations'))
