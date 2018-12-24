@@ -1,0 +1,120 @@
+:root {
+  --bg-neutral: #e1e2e1;
+  --fg-neutral: #000000;
+  --bg-neutral-light: #F5F5F6;
+  --fg-neutral-light: #000000;
+  --bg-neutral-dark: #F5F5F6;
+  --fg-neutral-dark: #000000;
+  --bg-main: #1e88e5;
+  --fg-main: #000000;
+  --bg-light: #6ab7ff;
+  --fg-light: #000000;
+  --bg-dark: #005cb2;
+  --fg-dark: #ffffff;
+  font-family: 'Roboto', sans-serif;
+  scroll-behavior: smooth;
+}
+/*
+*:hover {
+	outline:red 1px dotted;
+	background:rgba(255,0,0,0.1);
+}
+*/
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+body .pager {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: mandatory;
+  scroll-snap-destination: 0 100%;
+  scroll-snap-points-y: repeat(100vh);
+  scroll-snap-type: y mandatory;
+  display: grid;
+  grid-template: "carousel ." "map detail" "booking .";
+  grid-template-rows: 100vh 100vh 100vh;
+  grid-template-columns: 100vw 400px;
+  transition: all 1s;
+}
+body .pager .page {
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  align-content: stretch;
+}
+body .pager #carousel {
+  grid-area: carousel;
+}
+body .pager #carousel .carousel {
+  flex-grow: 1;
+}
+body .pager #map {
+  grid-area: map;
+}
+body .pager #map #mapid {
+  flex-grow: 1;
+}
+body .pager #details {
+  overflow: hidden;
+  box-shadow: 2.5px 0 15px 2.5px rgba(0, 0, 0, 0.75);
+  z-index: 550;
+  grid-area: detail;
+  background: white;
+  position: relative;
+  left: 0;
+  transition: all 0.5s;
+}
+body .pager #details.open {
+  left: -400px;
+}
+body .pager #booking {
+  grid-area: booking;
+}
+header {
+  position: relative;
+  z-index: 500;
+  padding: 1px 20px;
+  background: var(--bg-main);
+  color: var(--fg-main);
+  box-shadow: 0 2.5px 15px 2.5px rgba(0, 0, 0, 0.75);
+}
+#mapid {
+  min-height: 50px;
+}
+.carousel {
+  position: relative;
+}
+.carousel .navigation {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  padding: 0;
+}
+.carousel .navigation:after,
+.carousel .navigation:before {
+  content: "";
+  flex-grow: 1;
+}
+.carousel .navigation > * {
+  list-style: none;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.carousel .navigation .prev {
+  order: -1;
+}
+.carousel .navigation .next {
+  order: 1;
+}
