@@ -20,6 +20,7 @@ async function highlightStation(e) {
 }
 
 async function main() {
+	/*
 	document.body.appendChild(
 		_('header',
 			_('a[href="#carousel"]', 'Présentation'),
@@ -27,6 +28,7 @@ async function main() {
 			_('a[href="#booking"]', 'Réservations')
 		)
 	)
+	*/
 	var pager = _('.pager')
 	document.body.appendChild(pager)
 	// get information about current contract

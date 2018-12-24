@@ -42,6 +42,9 @@ body .pager {
   grid-template-columns: 100vw 50vw;
   transition: all 1s;
 }
+body .pager::-webkit-scrollbar {
+  width: 0 !important;
+}
 body .pager .page {
   scroll-snap-align: center;
   display: flex;
