@@ -81,6 +81,22 @@ body .pager #details.open {
 body .pager #booking {
   grid-area: booking;
 }
+.multibar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.multibar:before,
+.multibar:after {
+  content: "";
+  flex-grow: 1;
+}
+.multibar > .left {
+  order: -1;
+}
+.multibar > .right {
+  order: 1;
+}
 header {
   position: relative;
   z-index: 500;
