@@ -136,7 +136,9 @@ canvas {
 }
 .carousel .navigation .prev {
   order: -1;
+  font-size: 150%;
 }
 .carousel .navigation .next {
   order: 1;
+  font-size: 150%;
 }
