@@ -4,53 +4,169 @@ var baseUrl = "https://api.jcdecaux.com/vls/v1"
 var contract = {
 	name: "Lyon"
 }
-//var contract = {name:"Paris"}
+
+var els = {}
 
 async function highlightStation(e) {
-	var station = JSON.parse(await ajaxGET(baseUrl + "/stations/"+e.target.number+"?contract=" + contract.name + "&apiKey=" + apiKey))
-	var details = document.getElementById("details")
-	details.classList.toggle("open")
-	document.getElementById("dname").textContent    = station.name
-	document.getElementById("daddress").textContent = station.address
-	document.getElementById("dsize").textContent    = station.available_bikes
-	document.getElementById("dcurrent").textContent = station.bike_stands
-	document.getElementById("dnumber").value        = station.number
+	//fetch station data
+	var station = JSON.parse(await ajaxGET(baseUrl + "/stations/" + e.target.number + "?contract=" + contract.name + "&apiKey=" + apiKey))
+
+	//display station data & open pane
+	els.details.classList.toggle("open")
+	els.detail_name.textContent = station.name
+	els.detail_address.textContent = station.address
+	els.detail_size.textContent = station.available_bikes
+	els.detail_current.textContent = station.bike_stands
+	els.detail_number.value = station.number
 }
 
-async function main() {
-	/*
-	document.body.appendChild(
-		_('header',
-			_('a[href="#carousel"]', 'Présentation'),
-			_('a[href="#map"]', 'Carte'),
-			_('a[href="#booking"]', 'Réservations')
-		)
-	)
-	*/
-	var pager = _('.pager')
-	document.body.appendChild(pager)
-	// get information about current contract
-	contract.name = (new URL(window.location.href)).searchParams.get("city") || "Lyon"
-	var contracts = JSON.parse(await ajaxGET(baseUrl + "/contracts?&apiKey=" + apiKey))
+function windowToCanvas(canvas, x, y) {
+	var bbox = canvas.getBoundingClientRect();
+	return {
+		x: x - bbox.left * (canvas.width / bbox.width),
+		y: y - bbox.top * (canvas.height / bbox.height)
+	};
+}
 
-	for (tmpContract of contracts) {
-		if (tmpContract.name == contract.name) {
-			contract = tmpContract
-			break;
-		}
+var mouseDown = false;
+
+function signCreate(e) {
+	els.ctx = e.target.getContext("2d");
+	els.ctx.beginPath();
+}
+
+function docSignMouseDown() {
+	els.ctx.beginPath();
+	mouseDown = true;
+}
+
+function docSignMouseUp() {
+	mouseDown = false;
+}
+
+function signMouseMove(e) {
+	if (mouseDown) {
+		var loc = windowToCanvas(els.sign, e.clientX, e.clientY);
+		els.ctx.lineTo(loc.x, loc.y);
+		els.ctx.stroke();
 	}
+}
 
-	try {
-		var stations = JSON.parse(await ajaxGET(baseUrl + "/stations?contract=" + contract.name + "&apiKey=" + apiKey))
-
-		pager.appendChild(
+var icon={
+	100: L.icon({
+		iconUrl: 'velo-100.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'velo-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	75:L.icon({
+		iconUrl: 'velo-75.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'velo-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	50:L.icon({
+		iconUrl: 'velo-50.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'velo-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	25:L.icon({
+		iconUrl: 'velo-25.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'velo-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	0:L.icon({
+		iconUrl: 'velo-0.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'velo-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+}
+var group={
+	100: L.icon({
+		iconUrl: 'group-100.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'group-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	75:L.icon({
+		iconUrl: 'group-75.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'group-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	50:L.icon({
+		iconUrl: 'group-50.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'group-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	25:L.icon({
+		iconUrl: 'group-25.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'group-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+	0:L.icon({
+		iconUrl: 'group-0.png',
+		iconSize: [25, 41],
+		iconAnchor: [13, 41],
+		popupAnchor: [0, -28],
+		shadowUrl: 'group-shadow.png',
+		shadowSize: [41, 41],
+		shadowAnchor: [13, 41]
+	}),
+}
+var markers = []
+var error = []
+async function main() {
+	// prepare document body
+	document.body.appendChild(
+		els.pager = _('.pager', {
+				events: {
+					mousedown: docSignMouseDown,
+					mouseup: docSignMouseUp,
+				}
+			},
 			_('section#carousel.page',
-				_('header', _('h2', 'Présentation')),
+				_('header.multibar',
+					_('h2.left', 'Présentation'),
+					els.cities = _('select.right', _('option[value]', `(Ville)`))
+				),
 				_('.carousel',
 					_('.slides',
 						_('#slide1.slide',
-							_('h3', `${contract.commercial_name}`),
-							_('p', `Bienvenu sur le site de réservation de vélo pour ${contract.name}`)
+							els.welcome_title = _('h3', `JCDecaux`),
+							els.welcome_sentence = _('p', `Bienvenu sur le site de réservation de vélo.`)
 						),
 						_('#slide2.slide',
 							_('h3', 'Trouvez votre vélo'),
@@ -66,112 +182,131 @@ async function main() {
 						)
 					),
 					_('ul.navigation',
-						_('li.prev.fas.fa-chevron-left'),
-						_('li[data-jump="#slide1"].far.fa-circle'),
-						_('li[data-jump="#slide2"].far.fa-circle'),
-						_('li[data-jump="#slide3"].far.fa-circle'),
-						_('li[data-jump="#slide4"].far.fa-circle'),
-						_('li.next.fas.fa-chevron-right')
+						_('li.prev.fas.fa-caret-left'),
+						_('li[data-jump="#slide1"].fas.fa-circle'),
+						_('li[data-jump="#slide2"].fas.fa-circle'),
+						_('li[data-jump="#slide3"].fas.fa-circle'),
+						_('li[data-jump="#slide4"].fas.fa-circle'),
+						_('li.play.fas.fa-play'),
+						_('li.pause.fas.fa-pause'),
+						_('li.next.fas.fa-caret-right')
 					)
 				)
-			)
-		)
-		var map = _('#mapid')
-		pager.appendChild(
+			),
 			_('section#map.page',
 				_('header', _('h2', 'Carte')),
-				map,
-			)
-		)
-		pager.appendChild(
-			_('section#details.page',
-				_('header', _('h2.hidden', 'Details')),
-				_('p#dname', '...'),
-				_('p', 'Adresse : ',_("span #daddress","...")),
-				_('p',_("span#dsize","...")," places"),
-				_('p',_("span#dcurrent","...")," vélos disponibles"),
+				els.map = _('#mapid'),
+			),
+			els.details = _('section#details.page',
+				_('header', _('h2.multibar',
+					_('.left', 'Details'),
+					_('i.right.fas.fa-times', {
+						events: {
+							click: function() {
+								els.details.classList.toggle("open")
+							}
+						}
+					})
+				)),
+				els.detail_name = _('p', '...'),
+				_('p', 'Adresse : ', els.detail_address = _("span", "...")),
+				_('p', els.detail_size = _("span", "..."), " places"),
+				_('p', els.detail_current = _("span", "..."), " vélos disponibles"),
 				_('form',
-					_('input[name="id" id="dnumber" type="hidden"]'),
-					_("p",_('label[for="name"]','Nom :'),_('input[name="name" id="name" type="text"]')),
-					_("p",_('label[for="surname"]','Prénom :'),_('input[name="surname" id="surname" type="text"]')),
+					els.detail_number = _('input[name="id" type="hidden"]'),
+					_("p", _('label[for="name"]', 'Nom :'), _('input#name[name="name" type="text"]')),
+					_("p", _('label[for="surname"]', 'Prénom :'), _('input#surname[name="surname" type="text"]')),
 					_('input[name="sign" type="hidden"]'),
+					_("p", _('label[for="sign"]', 'Signature :'), els.sign = _('canvas#sign', {
+						events: {
+							create: signCreate,
+							mousemove: signMouseMove
+						}
+					})),
 					_('input[value="Réserver" type="submit"]')
 				)
+			),
+			_('section#booking.page',
+				_('header', _('h2.hidden', 'Reservations'))
 			)
 		)
-		var icon_100 = L.icon({
-			iconUrl: 'velo-100.png',
-			iconSize: [25, 41],
-			iconAnchor: [13, 41],
-			popupAnchor: [0, -28],
-			shadowUrl: 'velo-shadow.png',
-			shadowSize: [41, 41],
-			shadowAnchor: [13, 41]
-		});
-		var icon_75 = L.icon({
-			iconUrl: 'velo-75.png',
-			iconSize: [25, 41],
-			iconAnchor: [13, 41],
-			popupAnchor: [0, -28],
-			shadowUrl: 'velo-shadow.png',
-			shadowSize: [41, 41],
-			shadowAnchor: [13, 41]
-		});
-		var icon_50 = L.icon({
-			iconUrl: 'velo-50.png',
-			iconSize: [25, 41],
-			iconAnchor: [13, 41],
-			popupAnchor: [0, -28],
-			shadowUrl: 'velo-shadow.png',
-			shadowSize: [41, 41],
-			shadowAnchor: [13, 41]
-		});
-		var icon_25 = L.icon({
-			iconUrl: 'velo-25.png',
-			iconSize: [25, 41],
-			iconAnchor: [13, 41],
-			popupAnchor: [0, -28],
-			shadowUrl: 'velo-shadow.png',
-			shadowSize: [41, 41],
-			shadowAnchor: [13, 41]
-		});
-		var icon_0 = L.icon({
-			iconUrl: 'velo-0.png',
-			iconSize: [25, 41],
-			iconAnchor: [13, 41],
-			popupAnchor: [0, -28],
-			shadowUrl: 'velo-shadow.png',
-			shadowSize: [41, 41],
-			shadowAnchor: [13, 41]
-		});
+	)
 
-		var mymap = L.map(map, {
+	//try {
+		// get information about contracts
+		contract.name = (new URL(window.location.href)).searchParams.get("city") || "Lyon"
+		var contracts = JSON.parse(await ajaxGET(baseUrl + "/contracts?&apiKey=" + apiKey))
+
+		// complete current contract from contract name
+		for (tmpContract of contracts) {
+			els.cities.appendChild(_('option', {
+				attrs: {
+					value: tmpContract.name
+				}
+			}, `${tmpContract.name} : ${tmpContract.commercial_name}`))
+			if (tmpContract.name == contract.name) {
+				contract = tmpContract
+				break;
+			}
+		}
+
+		// complete presentation from contract infos
+		els.welcome_title.textContent = `${contract.commercial_name}`
+		els.welcome_sentence.textContent = `Bienvenu sur le site de réservation de vélo pour ${contract.name}`
+
+		// get station list from contract name
+		var stations = JSON.parse(await ajaxGET(baseUrl + "/stations?contract=" + contract.name + "&apiKey=" + apiKey))
+
+		var mymap = L.map(els.map, {
 			maxBoundsViscosity: 0.5,
 			bounceAtZoomLimits: false,
 			zoomSnap: 0,
-			scrollWheelZoom: false
+			scrollWheelZoom: false,
+			maxZoom: 18
 		});
 
 		coords = [
 			[Infinity, Infinity],
 			[-Infinity, -Infinity]
 		]
-		for (i in stations) {
-			let station = stations[i]
+		var markerscluster = L.markerClusterGroup({
+			iconCreateFunction: function(cluster) {
+				let bike_available = 0
+				let station_available = cluster.getChildCount()
+				for (station of cluster.getAllChildMarkers()) {
+					bike_available += station.available
+				}
+				let average = bike_available / station_available
+				console.log(cluster)
+				return average < 2 ? group[0] :
+				       average < 4 ? group[25] :
+						 average < 6 ? group[50] :
+						 average < 8 ? group[75] :
+						 group[100]
+			}
+		})
+		for (station of stations) {
 			coords[0][0] = Math.min(coords[0][0], station.position.lat)
 			coords[0][1] = Math.min(coords[0][1], station.position.lng)
 			coords[1][0] = Math.max(coords[1][0], station.position.lat)
 			coords[1][1] = Math.max(coords[1][1], station.position.lng)
 
 			let marker = L.marker([station.position.lat, station.position.lng])
-			p = station.available_bikes
-			marker.options.icon = p < 2 ? icon_0 : p < 4 ? icon_25 : p < 6 ? icon_50 : p < 8 ? icon_75 : icon_100
+
+			marker.available = station.available_bikes
+			marker.options.icon = marker.available < 2 ? icon[0] :
+			                      marker.available < 4 ? icon[25] :
+										 marker.available < 6 ? icon[50] :
+										 marker.available < 8 ? icon[75] :
+										 icon[100]
 			marker.options.riseOnHover = true
 			marker.number = station.number
 			marker.on({
 				click: highlightStation
 			})
-			marker.addTo(mymap)
+			markers.push(sel.substring(1))
+			markerscluster.addLayer(marker)
+			//marker.addTo(mymap)
 		}
 
 		coords[0][0] = coords[0][0] - (coords[1][0] - coords[0][0]) * 0.1
@@ -183,32 +318,13 @@ async function main() {
 		mymap.setMaxBounds(coords)
 		mymap.fitBounds(coords)
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
-
-		pager.appendChild(
-			_('section#booking.page',
-				_('header', _('h2.hidden', 'Reservations'))
-			)
-		)
-	} catch (e) {
-		pager.appendChild(
-			_('section#carousel.page',
-				_('header', _('h2', 'Présentation')),
-				_('.carousel',
-					_('.slides',
-						_('#slide1.slide',
-							_('h3', `Erreur`),
-							_('p', `${e}`)
-						)
-					),
-					_('ul.navigation',
-						_('li.prev.fas.fa-chevron-left'),
-						_('li[data-jump="#slide1"].far.fa-circle'),
-						_('li.next.fas.fa-chevron-right')
-					)
-				)
-			)
-		)
+		markerscluster.addTo(mymap)
+		/*
+	} catch (err) {
+		els.welcome_title.textContent = `Erreur`
+		els.welcome_sentence.textContent = `${err}`
 	}
+	*/
 	/*
 
 	var form = _("form", [
