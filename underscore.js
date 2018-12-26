@@ -1,3 +1,7 @@
+/*
+ * Bibliotheque de création rapide d'élément en utilisant une syntaxe proche des selecteurs CSS
+ */
+
 function isArray(value) {
 	return value && typeof value === 'object' && value.constructor === Array;
 }
@@ -5,79 +9,84 @@ function isArray(value) {
 function isObject(value) {
 	return value && typeof value === 'object' && value.constructor === Object;
 }
-function flatten(arr) {
-  return arr.reduce(function (flat, toFlatten) {
-    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-  }, []);
+function isString(value) {
+	return value && (typeof elmt === 'string' || elmt instanceof String)
 }
+
+function flatten(arr) {
+	return arr.reduce(function(flat, toFlatten) {
+		return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+	}, []);
+}
+
+function findAttr(sel) {
+	let attr
+	let attrs = sel.substring(1, sel.length - 1)
+	let ret = {}
+	let re = /(\w+)(="([^"]*)")?/g
+	do {
+		let attr = re.exec(attrs)
+		if (attr) ret[attr[1]] = attr[3] ? attr[3] : ""
+	} while (attr)
+	return ret
+}
+
 function _(selector, ...args) {
-	let tag = "div"
-	let id = null
-	let cls = []
-	let attrs = ""
-	let dynattrs = {}
-	let elmts = []
+	let static = {
+		tag: "div",
+		id: null,
+		class: [],
+		attrs: {},
+		elmts: []
+	}
+	let dynamic = {}
 
 	// search for arguments type
 	for (arg of args) {
-		if (isObject(arg)) dynattrs = arg
-		else elmts.push(arg)
+		if (isObject(arg)) dynamic = arg
+		else static.elmts.push(arg)
 	}
-	elmts = flatten(elmts)
-	// search for pattern
-	let sels = selector.match(/([\w-]+|#[\w-]+|\.[\w-]+|\[[^\]]*\])/g)
-	for (sel of sels) {
+
+	// search for pattern in selector
+	let selectors = selector.match(/([\w-]+|#[\w-]+|\.[\w-]+|\[[^\]]*\])/g)
+	for (sel of selectors) {
 		switch (sel.charAt(0)) {
 			case "#":
-				id = sel.substring(1);
+				static.id = sel.substring(1);
 				break;
 			case ".":
-				cls.push(sel.substring(1))
+				static.class.push(sel.substring(1))
 				break;
 			case "[":
-				attrs += sel.substring(1, sel.length - 1) + " ";
+				Object.assign(static.attrs, findAttr(sel))
 				break;
 			default:
-				tag = sel
+				static.tag = sel
 		}
 	}
-	// define element by tag
-	var el = document.createElement(tag)
-	// add id
-	if (id) {
-		el.id = id
+
+	// process
+	if (dynamic.elmts) {
+		dynamic.elmts = flatten(dynamic.elmts)
+		if (!Array.isArray(dynamic.elmts)) dynamic.elmts = [dynamic.elmts]
 	}
-	// add classes
-	for (cl of cls) {
-		el.classList.add(cl)
-	}
-	// add attributes
-	re = /(\w+)(="([^"]*)")?/g
-	do {
-		_attr = re.exec(attrs)
-		if (_attr) {
-			key = _attr[1]
-			value = _attr[3]
-			if (!value) {
-				value = ""
-			}
-			el.setAttribute(key, value)
-		}
-	} while (_attr);
-	for (key in dynattrs) {
-		el.setAttribute(key, dynattrs[key])
-	}
-	// if sub element is not array, make it array
-	if (!Array.isArray(elmts)) {
-		elmts = [elmts]
-	}
-	// integrate sub elements
-	for (i = 0; i < elmts.length; i++) {
-		elmt = elmts[i]
-		if (typeof elmt === 'string' || elmt instanceof String) {
-			elmt = document.createTextNode(elmt)
-		}
-		el.appendChild(elmt)
-	}
-	return el
+
+	// merging
+	if (dynamic.tag) static.tag = dynamic.tag
+	if (dynamic.id) static.id = dynamic.id
+
+	// create & populate DOM element
+	var element = document.createElement(static.tag)
+	if (static.id) element.id = static.id
+	for (cl of static.class) element.classList.add(cl)
+	for (attr in static.attrs) element.setAttribute(attr, static.attrs[attr])
+	if (dynamic.class) for (cl of dynamic.class) element.classList.add(cl)
+	if (dynamic.attrs) for (attr in dynamic.attrs) element.setAttribute(attr, dynamic.attrs[attr])
+	for (elmt of static.elmts) element.appendChild(isString(elmt) ? document.createTextNode(elmt) : elmt)
+	if (dynamic.elmts) for (elmt of dynamic.elmts) element.appendChild(isString(elmt) ? document.createTextNode(elmt) : elmt)
+	if (dynamic.events) for (event in dynamic.events) element.addEventListener(event, dynamic.events[event])
+
+	if (dynamic.obj && dynamic.name) dynamic.obj[dynamic.name] = element
+	element.dispatchEvent(new MouseEvent('create',{}))
+	return element
 }
