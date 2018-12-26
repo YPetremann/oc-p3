@@ -25,7 +25,7 @@ function findAttr(sel) {
 	let ret = {}
 	let re = /(\w+)(="([^"]*)")?/g
 	do {
-		let attr = re.exec(attrs)
+		attr = re.exec(attrs)
 		if (attr) ret[attr[1]] = attr[3] ? attr[3] : ""
 	} while (attr)
 	return ret
@@ -87,6 +87,6 @@ function _(selector, ...args) {
 	if (dynamic.events) for (event in dynamic.events) element.addEventListener(event, dynamic.events[event])
 
 	if (dynamic.obj && dynamic.name) dynamic.obj[dynamic.name] = element
-	element.dispatchEvent(new MouseEvent('create',{}))
+	element.dispatchEvent(new MouseEvent('create',{target:element}))
 	return element
 }
