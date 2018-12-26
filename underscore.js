@@ -9,6 +9,7 @@ function isArray(value) {
 function isObject(value) {
 	return value && typeof value === 'object' && value.constructor === Object;
 }
+
 function isString(value) {
 	return value && (typeof elmt === 'string' || elmt instanceof String)
 }
@@ -80,13 +81,19 @@ function _(selector, ...args) {
 	if (static.id) element.id = static.id
 	for (cl of static.class) element.classList.add(cl)
 	for (attr in static.attrs) element.setAttribute(attr, static.attrs[attr])
-	if (dynamic.class) for (cl of dynamic.class) element.classList.add(cl)
-	if (dynamic.attrs) for (attr in dynamic.attrs) element.setAttribute(attr, dynamic.attrs[attr])
+	if (dynamic.class)
+		for (cl of dynamic.class) element.classList.add(cl)
+	if (dynamic.attrs)
+		for (attr in dynamic.attrs) element.setAttribute(attr, dynamic.attrs[attr])
 	for (elmt of static.elmts) element.appendChild(isString(elmt) ? document.createTextNode(elmt) : elmt)
-	if (dynamic.elmts) for (elmt of dynamic.elmts) element.appendChild(isString(elmt) ? document.createTextNode(elmt) : elmt)
-	if (dynamic.events) for (event in dynamic.events) element.addEventListener(event, dynamic.events[event])
+	if (dynamic.elmts)
+		for (elmt of dynamic.elmts) element.appendChild(isString(elmt) ? document.createTextNode(elmt) : elmt)
+	if (dynamic.events)
+		for (event in dynamic.events) element.addEventListener(event, dynamic.events[event])
 
 	if (dynamic.obj && dynamic.name) dynamic.obj[dynamic.name] = element
-	element.dispatchEvent(new MouseEvent('create',{target:element}))
+	element.dispatchEvent(new MouseEvent('create', {
+		target: element
+	}))
 	return element
 }
