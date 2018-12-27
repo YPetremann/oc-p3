@@ -109,10 +109,16 @@ body {
 header {
 	position: relative;
 	z-index: 500;
-	padding: 1px 20px;
+	padding: 1px 10px;
 	background: var(--bg-main);
 	color: var(--fg-main);
 	box-shadow: 0 2.5px 15px 2.5px rgba(0,0,0,0.75);
+	&>*{
+		margin:10px;
+	}
+	a {
+		color:var(--fg-main);
+	}
 }
 canvas {
 	border:1px solid silver;
@@ -175,26 +181,18 @@ canvas {
 	border-radius:50%;
 	background:white;
 	border:5px solid red;
-	//box-shadow: 1px 1px 6px black;
 }
+
 .group0,
+.station0 {border-color:#c92026; box-shadow: 0px 0px 20px 5px #c92026;}
 .group25,
+.station25 {border-color:#c96f20; box-shadow: 0px 0px 20px 5px #c96f20;}
 .group50,
+.station50 {border-color:#c9c420; box-shadow: 0px 0px 20px 5px #c9c420;}
 .group75,
-.group100 {
-	&:before,&:after{
-		border-radius:50%;
-		position:absolute;
-		width:35px;
-		height:35px;
-		border: 5px solid rgba(0,0,0,0.5);
-		content:" ";
-	}
-	&:after{
-		width:45px;
-		height:45px;
-	}
-}
+.station75 {border-color:#7ac920; box-shadow: 0px 0px 20px 5px #7ac920;}
+.group100,
+.station100 {border-color:#2097c4; box-shadow: 0px 0px 20px 5px #2097c4;}
 
 .station0,
 .station25,
@@ -202,15 +200,5 @@ canvas {
 .station75,
 .station100 {
 	border-bottom-left-radius: 0;
+	box-shadow: 1px 1px 10px black;
 }
-
-.group0,
-.station0 {border-color:#c92026; &:before{border-color:fadeout(#c92026, 50%);} &:after{border-color:fadeout(#c92026, 75%);}}
-.group25,
-.station25 {border-color:#c96f20; &:before{border-color:fadeout(#c96f20, 50%);} &:after{border-color:fadeout(#c96f20, 75%);}}
-.group50,
-.station50 {border-color:#c9c420; &:before{border-color:fadeout(#c9c420, 50%);} &:after{border-color:fadeout(#c9c420, 75%);}}
-.group75,
-.station75 {border-color:#7ac920; &:before{border-color:fadeout(#7ac920, 50%);} &:after{border-color:fadeout(#7ac920, 75%);}}
-.group100,
-.station100 {border-color:#2097c4; &:before{border-color:fadeout(#2097c4, 50%);} &:after{border-color:fadeout(#2097c4, 75%);}}
