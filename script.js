@@ -122,7 +122,7 @@ async function main() {
 					)
 				)
 			),
-			_('section#map.page',
+			_('section#map.page',{events: {click: function() {els.details.classList.remove("open")}}},
 				_('header.multibar',
 					_('h2', 'Carte'),
 					els.cities = _('select.right', {
