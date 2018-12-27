@@ -15,8 +15,8 @@ async function highlightStation(e) {
 	els.details.classList.toggle("open")
 	els.detail_name.textContent = station.name
 	els.detail_address.textContent = station.address
-	els.detail_size.textContent = station.available_bikes
-	els.detail_current.textContent = station.bike_stands
+	els.detail_size.textContent = station.bike_stands
+	els.detail_current.textContent = station.available_bikes
 	els.detail_number.value = station.number
 }
 
