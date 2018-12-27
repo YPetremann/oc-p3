@@ -252,7 +252,7 @@ async function main() {
 		}
 		*/
 	}
-	reload("lyon")
+	await reload("Lyon")
 
 
 	/*
