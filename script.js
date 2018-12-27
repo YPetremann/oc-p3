@@ -21,6 +21,7 @@ async function highlightStation(e) {
 	els.detail_address.textContent = station.address
 	els.detail_size.textContent = station.bike_stands
 	els.detail_current.textContent = station.available_bikes
+	els.detail_city.value = contract.name
 	els.detail_number.value = station.number
 }
 
@@ -71,7 +72,26 @@ function clusterIcon(cluster) {
 	return
 }
 
-async function reloadmap(city) {
+function bookSubmit(e) {
+	e.preventDefault()
+	let form = e.target
+	localStorage.setItem("name", form.name.value)
+	localStorage.setItem("surname", form.surname.value)
+
+	sessionStorage.setItem("name", form.name.value)
+	sessionStorage.setItem("surname", form.surname.value)
+	sessionStorage.setItem("city", form.city.value)
+	sessionStorage.setItem("number", form.number.value)
+	sessionStorage.setItem("booktime", new Date())
+
+	reloadBooking();
+	els.details.classList.remove("open")
+	els.bookingsPage.scrollIntoView({
+		behavior: 'smooth'
+	});
+}
+
+async function reloadMap(city) {
 	//try {
 	// get information about contracts
 	contract.name = city
@@ -152,7 +172,16 @@ async function reloadmap(city) {
 	}
 	*/
 }
-async function reloadbook() {}
+async function reloadBooking() {
+	els.bookings.innerHTML = ''
+	var station = JSON.parse(await ajaxGET(`${baseUrl}/stations/${sessionStorage.getItem("number")}?contract=${sessionStorage.getItem("city")}&apiKey=${apiKey}`))
+	els.bookings.appendChild(
+		_(".book",
+			`Vélo réservé à la station ${station.name} par ${sessionStorage.getItem("name")} ${sessionStorage.getItem("surname")}`,
+			_(".time",sessionStorage.getItem("booktime"))
+		)
+	)
+}
 var markers = []
 var error = []
 async function main() {
@@ -215,7 +244,7 @@ async function main() {
 					els.cities = _('select.right', {
 						events: {
 							change: function() {
-								reloadmap(els.cities.value)
+								reloadMap(els.cities.value)
 							}
 						}
 					}, _('option[value]', `(Ville)`)),
@@ -258,18 +287,20 @@ async function main() {
 					_('input[value="Réserver" type="submit"]')
 				)
 			),
-			els.bookings = _('section#booking.page',
+			els.bookingsPage = _('section#booking.page',
 				_('header.multibar',
 					_('h2.hidden', 'Reservations'),
 					_('a.right.fas.fa-book[href="#carousel"]'),
 					_('a.right.fas.fa-map-marked-alt[href="#map"]')
-				)
+				),
+				els.bookings = _('div')
 			)
 		)
 	)
 	if (localStorage.getItem("name")) els.name.value = localStorage.getItem("name");
 	if (localStorage.getItem("surname")) els.surname.value = localStorage.getItem("surname");
-	await reloadmap("Lyon")
+	await reloadBooking()
+	await reloadMap("Lyon")
 
 	var anchoreds = document.querySelectorAll("a[href*='#']:not([href='#'])");
 	for (anchored of anchoreds) {
