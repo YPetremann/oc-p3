@@ -9,6 +9,12 @@ var els = {}
 
 async function highlightStation(e) {
 	//fetch station data
+	els.detail_name.textContent = "..."
+	els.detail_address.textContent = "..."
+	els.detail_size.textContent = "..."
+	els.detail_current.textContent = "..."
+	els.detail_number.value = "..."
+
 	var station = JSON.parse(await ajaxGET(baseUrl + "/stations/" + e.target.number + "?contract=" + contract.name + "&apiKey=" + apiKey))
 
 	//display station data & open pane
