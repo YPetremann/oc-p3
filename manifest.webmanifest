@@ -1,0 +1,8 @@
+{
+  "background_color": "#005cb2",
+  "description": "Application de réservation de vélo JCDecaux.",
+  "display": "fullscreen",
+  "name": "JCDecaux : Vélos",
+  "short_name": "Vélib",
+  "start_url": "/"
+}
