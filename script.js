@@ -51,101 +51,6 @@ function signMouseMove(e) {
 		els.ctx.stroke();
 	}
 }
-
-var icon={
-	100: L.icon({
-		iconUrl: 'velo-100.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'velo-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	75:L.icon({
-		iconUrl: 'velo-75.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'velo-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	50:L.icon({
-		iconUrl: 'velo-50.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'velo-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	25:L.icon({
-		iconUrl: 'velo-25.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'velo-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	0:L.icon({
-		iconUrl: 'velo-0.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'velo-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-}
-var group={
-	100: L.icon({
-		iconUrl: 'group-100.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'group-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	75:L.icon({
-		iconUrl: 'group-75.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'group-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	50:L.icon({
-		iconUrl: 'group-50.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'group-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	25:L.icon({
-		iconUrl: 'group-25.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'group-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-	0:L.icon({
-		iconUrl: 'group-0.png',
-		iconSize: [25, 41],
-		iconAnchor: [13, 41],
-		popupAnchor: [0, -28],
-		shadowUrl: 'group-shadow.png',
-		shadowSize: [41, 41],
-		shadowAnchor: [13, 41]
-	}),
-}
 var markers = []
 var error = []
 async function main() {
@@ -212,7 +117,7 @@ async function main() {
 				_('p', 'Adresse : ', els.detail_address = _("span", "...")),
 				_('p', els.detail_size = _("span", "..."), " places"),
 				_('p', els.detail_current = _("span", "..."), " vélos disponibles"),
-				_('form',
+				els.detail_form = _('form',
 					els.detail_number = _('input[name="id" type="hidden"]'),
 					_("p", _('label[for="name"]', 'Nom :'), _('input#name[name="name" type="text"]')),
 					_("p", _('label[for="surname"]', 'Prénom :'), _('input#surname[name="surname" type="text"]')),
@@ -278,11 +183,16 @@ async function main() {
 				}
 				let average = bike_available / station_available
 				console.log(cluster)
-				return average < 2 ? group[0] :
-				       average < 4 ? group[25] :
-						 average < 6 ? group[50] :
-						 average < 8 ? group[75] :
-						 group[100]
+				return L.divIcon({
+    				iconSize: [25, 25],
+					className: average < 2 ? "group0" :
+					       average < 4 ? "group25" :
+							 average < 6 ? "group50" :
+							 average < 8 ? "group75" :
+							 "group100",
+    				html: `<b>${bike_available}</b>`
+				});
+				return
 			}
 		})
 		for (station of stations) {
@@ -294,11 +204,15 @@ async function main() {
 			let marker = L.marker([station.position.lat, station.position.lng])
 
 			marker.available = station.available_bikes
-			marker.options.icon = marker.available < 2 ? icon[0] :
-			                      marker.available < 4 ? icon[25] :
-										 marker.available < 6 ? icon[50] :
-										 marker.available < 8 ? icon[75] :
-										 icon[100]
+			marker.options.icon = L.divIcon({
+				iconSize: [25, 25],
+				className: marker.available < 2 ? "station0" :
+						 marker.available < 4 ? "station25" :
+						 marker.available < 6 ? "station50" :
+						 marker.available < 8 ? "station75" :
+						 "station100",
+				html: `<b>${marker.available}</b>`
+			});
 			marker.options.riseOnHover = true
 			marker.number = station.number
 			marker.on({
