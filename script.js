@@ -51,6 +51,25 @@ function signMouseMove(e) {
 		els.ctx.stroke();
 	}
 }
+function clusterIcon(cluster) {
+	let bike_available = 0
+	let station_available = cluster.getChildCount()
+	for (station of cluster.getAllChildMarkers()) {
+		bike_available += station.available
+	}
+	let average = bike_available / station_available
+	console.log(cluster)
+	return L.divIcon({
+		iconSize: [25, 25],
+		className: average < 2 ? "group0" :
+				 average < 4 ? "group25" :
+				 average < 6 ? "group50" :
+				 average < 8 ? "group75" :
+				 "group100",
+		html: `<b>${bike_available}</b>`
+	});
+	return
+}
 var markers = []
 var error = []
 async function main() {
@@ -64,8 +83,7 @@ async function main() {
 			},
 			_('section#carousel.page',
 				_('header.multibar',
-					_('h2.left', 'Présentation'),
-					els.cities = _('select.right', _('option[value]', `(Ville)`))
+					_('h2.left', 'Présentation')
 				),
 				_('.carousel',
 					_('.slides',
@@ -99,7 +117,16 @@ async function main() {
 				)
 			),
 			_('section#map.page',
-				_('header', _('h2', 'Carte')),
+				_('header.multibar',
+					_('h2', 'Carte'),
+					els.cities = _('select.right', {
+						events: {
+							change: function() {
+								reload(els.cities.value)
+							}
+						}
+					}, _('option[value]', `(Ville)`))
+				),
 				els.map = _('#mapid'),
 			),
 			els.details = _('section#details.page',
@@ -136,109 +163,92 @@ async function main() {
 			)
 		)
 	)
-
-	//try {
-		// get information about contracts
-		contract.name = (new URL(window.location.href)).searchParams.get("city") || "Lyon"
-		var contracts = JSON.parse(await ajaxGET(baseUrl + "/contracts?&apiKey=" + apiKey))
-
-		// complete current contract from contract name
-		for (tmpContract of contracts) {
-			els.cities.appendChild(_('option', {
-				attrs: {
-					value: tmpContract.name
+	async function reload(city){
+		//try {
+			// get information about contracts
+			contract.name = city
+			var contracts = JSON.parse(await ajaxGET(baseUrl + "/contracts?&apiKey=" + apiKey))
+			els.cities.innerHTML = ""
+			// complete current contract from contract name
+			for (tmpContract of contracts) {
+				els.cities.appendChild(_(`option[value="${tmpContract.name}"]`, `${tmpContract.name} : ${tmpContract.commercial_name}`))
+				if (tmpContract.name == contract.name) {
+					els.cities.value = tmpContract.name
+					contract = tmpContract
 				}
-			}, `${tmpContract.name} : ${tmpContract.commercial_name}`))
-			if (tmpContract.name == contract.name) {
-				contract = tmpContract
-				break;
 			}
-		}
 
-		// complete presentation from contract infos
-		els.welcome_title.textContent = `${contract.commercial_name}`
-		els.welcome_sentence.textContent = `Bienvenu sur le site de réservation de vélo pour ${contract.name}`
+			// complete presentation from contract infos
+			els.welcome_title.textContent = `${contract.commercial_name}`
+			els.welcome_sentence.textContent = `Bienvenu sur le site de réservation de vélo pour ${contract.name}`
 
-		// get station list from contract name
-		var stations = JSON.parse(await ajaxGET(baseUrl + "/stations?contract=" + contract.name + "&apiKey=" + apiKey))
+			// get station list from contract name
+			var stations = JSON.parse(await ajaxGET(baseUrl + "/stations?contract=" + contract.name + "&apiKey=" + apiKey))
 
-		var mymap = L.map(els.map, {
-			maxBoundsViscosity: 0.5,
-			bounceAtZoomLimits: false,
-			zoomSnap: 0,
-			scrollWheelZoom: false,
-			maxZoom: 18
-		});
-
-		coords = [
-			[Infinity, Infinity],
-			[-Infinity, -Infinity]
-		]
-		var markerscluster = L.markerClusterGroup({
-			iconCreateFunction: function(cluster) {
-				let bike_available = 0
-				let station_available = cluster.getChildCount()
-				for (station of cluster.getAllChildMarkers()) {
-					bike_available += station.available
-				}
-				let average = bike_available / station_available
-				console.log(cluster)
-				return L.divIcon({
-    				iconSize: [25, 25],
-					className: average < 2 ? "group0" :
-					       average < 4 ? "group25" :
-							 average < 6 ? "group50" :
-							 average < 8 ? "group75" :
-							 "group100",
-    				html: `<b>${bike_available}</b>`
-				});
-				return
-			}
-		})
-		for (station of stations) {
-			coords[0][0] = Math.min(coords[0][0], station.position.lat)
-			coords[0][1] = Math.min(coords[0][1], station.position.lng)
-			coords[1][0] = Math.max(coords[1][0], station.position.lat)
-			coords[1][1] = Math.max(coords[1][1], station.position.lng)
-
-			let marker = L.marker([station.position.lat, station.position.lng])
-
-			marker.available = station.available_bikes
-			marker.options.icon = L.divIcon({
-				iconSize: [25, 25],
-				className: marker.available < 2 ? "station0" :
-						 marker.available < 4 ? "station25" :
-						 marker.available < 6 ? "station50" :
-						 marker.available < 8 ? "station75" :
-						 "station100",
-				html: `<b>${marker.available}</b>`
+			// initialise map
+			oldmap = els.map
+			oldmap.parentNode.replaceChild(els.map = _('#mapid'), oldmap)
+			var mymap = L.map(els.map, {
+				maxBoundsViscosity: 0.5,
+				bounceAtZoomLimits: false,
+				zoomSnap: 0,
+				scrollWheelZoom: false,
+				maxZoom: 18
 			});
-			marker.options.riseOnHover = true
-			marker.number = station.number
-			marker.on({
-				click: highlightStation
-			})
-			markers.push(sel.substring(1))
-			markerscluster.addLayer(marker)
-			//marker.addTo(mymap)
+			coords = [
+				[Infinity, Infinity],
+				[-Infinity, -Infinity]
+			]
+
+			var markerscluster = L.markerClusterGroup({iconCreateFunction: clusterIcon})
+			for (station of stations) {
+				coords[0][0] = Math.min(coords[0][0], station.position.lat)
+				coords[0][1] = Math.min(coords[0][1], station.position.lng)
+				coords[1][0] = Math.max(coords[1][0], station.position.lat)
+				coords[1][1] = Math.max(coords[1][1], station.position.lng)
+
+				let marker = L.marker([station.position.lat, station.position.lng])
+
+				marker.available = station.available_bikes
+				marker.options.icon = L.divIcon({
+					iconSize: [25, 25],
+					className: marker.available < 2 ? "station0" :
+							 marker.available < 4 ? "station25" :
+							 marker.available < 6 ? "station50" :
+							 marker.available < 8 ? "station75" :
+							 "station100",
+					html: `<b>${marker.available}</b>`
+				});
+				marker.options.riseOnHover = true
+				marker.number = station.number
+				marker.on({
+					click: highlightStation
+				})
+				markers.push(sel.substring(1))
+				markerscluster.addLayer(marker)
+				//marker.addTo(mymap)
+			}
+
+			coords[0][0] = coords[0][0] - (coords[1][0] - coords[0][0]) * 0.1
+			coords[0][1] = coords[0][1] - (coords[1][1] - coords[0][1]) * 0.1
+			coords[1][0] = coords[1][0] + (coords[1][0] - coords[0][0]) * 0.1
+			coords[1][1] = coords[1][1] + (coords[1][1] - coords[0][1]) * 0.1
+
+			mymap.options.minZoom = mymap.getBoundsZoom(coords, false) - 0.5
+			mymap.setMaxBounds(coords)
+			mymap.fitBounds(coords)
+			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
+			markerscluster.addTo(mymap)
+			/*
+		} catch (err) {
+			els.welcome_title.textContent = `Erreur`
+			els.welcome_sentence.textContent = `${err}`
 		}
-
-		coords[0][0] = coords[0][0] - (coords[1][0] - coords[0][0]) * 0.1
-		coords[0][1] = coords[0][1] - (coords[1][1] - coords[0][1]) * 0.1
-		coords[1][0] = coords[1][0] + (coords[1][0] - coords[0][0]) * 0.1
-		coords[1][1] = coords[1][1] + (coords[1][1] - coords[0][1]) * 0.1
-
-		mymap.options.minZoom = mymap.getBoundsZoom(coords, false) - 0.5
-		mymap.setMaxBounds(coords)
-		mymap.fitBounds(coords)
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mymap);
-		markerscluster.addTo(mymap)
-		/*
-	} catch (err) {
-		els.welcome_title.textContent = `Erreur`
-		els.welcome_sentence.textContent = `${err}`
+		*/
 	}
-	*/
+	reload("lyon")
+
+
 	/*
 
 	var form = _("form", [
