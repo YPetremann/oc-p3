@@ -173,14 +173,16 @@ async function reloadMap(city) {
 	*/
 }
 async function reloadBooking() {
-	els.bookings.innerHTML = ''
-	var station = JSON.parse(await ajaxGET(`${baseUrl}/stations/${sessionStorage.getItem("number")}?contract=${sessionStorage.getItem("city")}&apiKey=${apiKey}`))
-	els.bookings.appendChild(
-		_(".book",
-			`Vélo réservé à la station ${station.name} par ${sessionStorage.getItem("name")} ${sessionStorage.getItem("surname")}`,
-			_(".time",sessionStorage.getItem("booktime"))
+	if(sessionStorage.getItem("number") && sessionStorage.getItem("city")){
+		els.bookings.innerHTML = ''
+		var station = JSON.parse(await ajaxGET(`${baseUrl}/stations/${sessionStorage.getItem("number")}?contract=${sessionStorage.getItem("city")}&apiKey=${apiKey}`))
+		els.bookings.appendChild(
+			_(".book",
+				`Vélo réservé à la station ${station.name} par ${sessionStorage.getItem("name")} ${sessionStorage.getItem("surname")}`,
+				_(".time",sessionStorage.getItem("booktime"))
+			)
 		)
-	)
+	}
 }
 var markers = []
 var error = []
@@ -299,8 +301,6 @@ async function main() {
 	)
 	if (localStorage.getItem("name")) els.name.value = localStorage.getItem("name");
 	if (localStorage.getItem("surname")) els.surname.value = localStorage.getItem("surname");
-	await reloadBooking()
-	await reloadMap("Lyon")
 
 	var anchoreds = document.querySelectorAll("a[href*='#']:not([href='#'])");
 	for (anchored of anchoreds) {
@@ -317,5 +317,7 @@ async function main() {
 			}
 		})
 	}
+	await reloadMap("Lyon")
+	await reloadBooking()
 }
 window.addEventListener("load", main);
