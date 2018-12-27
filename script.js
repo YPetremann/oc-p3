@@ -253,29 +253,6 @@ async function main() {
 		*/
 	}
 	await reload("Lyon")
-
-
-	/*
-
-	var form = _("form", [
-		_("p", []),
-		_("p", [
-			_('label[for="nom"]', "Votre nom"),
-			_('input[type="text" name="nom" id="nom" required]'),
-		]),
-		_("input", {
-			type: "submit",
-			value: "Votez"
-		}),
-	])
-	form.addEventListener("submit", async function(e) {
-		e.preventDefault()
-		var data = new FormData(form)
-
-		console.log("Commande envoyée au serveur")
-	})
-	document.body.appendChild(form)
-	*/
 	var anchoreds = document.querySelectorAll("a[href*='#']:not([href='#'])");
 	for (anchored of anchoreds) {
 		anchored.addEventListener("click", function(e) {
