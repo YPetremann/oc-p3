@@ -10,10 +10,10 @@
 	--secondaryColor: #673ab7;
 	--secondaryLightColor: #9a67ea;
 	--secondaryDarkColor: #320b86;
-	--neutralTextLightColor: #ffffff;
-	--neutralTextDarkColor: #000000;
 	--primaryTextColor: #212121;
 	--secondaryTextColor: #ce93d8;
+	--neutralTextLightColor: #ffffff;
+	--neutralTextDarkColor: #000000;
 	font-family: 'Roboto', sans-serif;
 	scroll-behavior: smooth;
 }
@@ -216,6 +216,7 @@ canvas {
 			*{
 				position:relative;
 				z-index:1;
+				font-family: 'Roboto', sans-serif;
 			}
 			h3{
 
@@ -227,6 +228,7 @@ canvas {
 				max-width:600px;
 				margin:0 auto;
 				padding:20px;
+				line-height: 2em;
 			}
 			a {
 				margin:20px;
@@ -253,6 +255,10 @@ canvas {
 				}
 			}
 		}
+		#slide1{background:#81d4fa; &:before{color:lighten(#81d4fa, 10%);}}
+		#slide2{background:#f8bbd0; &:before{color:lighten(#f8bbd0, 10%);}}
+		#slide3{background:#a5d6a7; &:before{color:lighten(#a5d6a7, 10%);}}
+		#slide4{background:#ffe082; &:before{color:lighten(#ffe082, 10%);}}
 	}
 }
 

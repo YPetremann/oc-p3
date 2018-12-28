@@ -8,10 +8,10 @@
   --secondaryColor: #673ab7;
   --secondaryLightColor: #9a67ea;
   --secondaryDarkColor: #320b86;
-  --neutralTextLightColor: #ffffff;
-  --neutralTextDarkColor: #000000;
   --primaryTextColor: #212121;
   --secondaryTextColor: #ce93d8;
+  --neutralTextLightColor: #ffffff;
+  --neutralTextDarkColor: #000000;
   font-family: 'Roboto', sans-serif;
   scroll-behavior: smooth;
 }
@@ -189,6 +189,7 @@ canvas {
 .carousel .slides .slide * {
   position: relative;
   z-index: 1;
+  font-family: 'Roboto', sans-serif;
 }
 .carousel .slides .slide h3 {
   text-align: center;
@@ -199,6 +200,7 @@ canvas {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  line-height: 2em;
 }
 .carousel .slides .slide a {
   margin: 20px;
@@ -215,6 +217,30 @@ canvas {
 .carousel .slides .slide.active ~ * {
   opacity: 0;
   left: 100%;
+}
+.carousel .slides #slide1 {
+  background: #81d4fa;
+}
+.carousel .slides #slide1:before {
+  color: #b2e5fc;
+}
+.carousel .slides #slide2 {
+  background: #f8bbd0;
+}
+.carousel .slides #slide2:before {
+  color: #fde9f0;
+}
+.carousel .slides #slide3 {
+  background: #a5d6a7;
+}
+.carousel .slides #slide3:before {
+  color: #c8e6c9;
+}
+.carousel .slides #slide4 {
+  background: #ffe082;
+}
+.carousel .slides #slide4:before {
+  color: #ffedb5;
 }
 .group0,
 .group100,
