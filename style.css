@@ -148,6 +148,13 @@ canvas {
   order: 1;
   font-size: 150%;
 }
+.carousel .navigation .play,
+.carousel .navigation .pause {
+  order: 1;
+}
+.carousel .navigation .hidden {
+  display: none;
+}
 .group0,
 .group25,
 .group50,
@@ -210,4 +217,7 @@ canvas {
 /* On mouse-over, add a deeper shadow */
 .book:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.active {
+  background: yellow;
 }
