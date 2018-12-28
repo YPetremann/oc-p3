@@ -26,38 +26,6 @@ async function highlightStation(e) {
 	els.detail_number.value = station.number
 }
 
-function windowToCanvas(canvas, x, y) {
-	var bbox = canvas.getBoundingClientRect();
-	return {
-		x: x - bbox.left * (canvas.width / bbox.width),
-		y: y - bbox.top * (canvas.height / bbox.height)
-	};
-}
-
-var mouseDown = false;
-
-function signCreate(e) {
-	els.ctx = e.target.getContext("2d");
-	els.ctx.beginPath();
-}
-
-function docSignMouseDown() {
-	els.ctx.beginPath();
-	mouseDown = true;
-}
-
-function docSignMouseUp() {
-	mouseDown = false;
-}
-
-function signMouseMove(e) {
-	if (mouseDown) {
-		var loc = windowToCanvas(els.sign, e.clientX, e.clientY);
-		els.ctx.lineTo(loc.x, loc.y);
-		els.ctx.stroke();
-	}
-}
-
 function clusterIcon(cluster) {
 	let bike_available = 0
 	let station_available = cluster.getChildCount()
@@ -206,13 +174,8 @@ var error = []
 async function main() {
 	// prepare document body
 	document.body.appendChild(
-		els.pager = _('.pager', {
-				events: {
-					mousedown: docSignMouseDown,
-					mouseup: docSignMouseUp,
-				}
-			},
-			_('section#carousel.page',
+		els.pager = _('.pager',
+			(new Carousel(_('section#carousel.page',
 				_('header.multibar',
 					_('h2.left', 'Présentation'),
 					_('a.right.fas.fa-map-marked-alt[href="#map"]'),
@@ -241,16 +204,16 @@ async function main() {
 					),
 					_('ul.navigation',
 						_('li.prev.fas.fa-caret-left'),
-						_('li[data-jump="#slide1"].fas.fa-circle'),
-						_('li[data-jump="#slide2"].fas.fa-circle'),
-						_('li[data-jump="#slide3"].fas.fa-circle'),
-						_('li[data-jump="#slide4"].fas.fa-circle'),
-						_('li.play.fas.fa-play'),
+						_('li.pager[data-jump="#slide1"].fas.fa-circle'),
+						_('li.pager[data-jump="#slide2"].fas.fa-circle'),
+						_('li.pager[data-jump="#slide3"].fas.fa-circle'),
+						_('li.pager[data-jump="#slide4"].fas.fa-circle'),
+						_('li.play.hidden.fas.fa-play'),
 						_('li.pause.fas.fa-pause'),
 						_('li.next.fas.fa-caret-right')
 					)
 				)
-			),
+			))).DOMelement,
 			_('section#map.page', {
 					events: {
 						click: function() {
@@ -297,12 +260,7 @@ async function main() {
 					_("p", _('label[for="name"]', 'Nom :'), els.name = _('input#name[name="name" type="text"]')),
 					_("p", _('label[for="surname"]', 'Prénom :'), els.surname = _('input#surname[name="surname" type="text"]')),
 					_('input[name="sign" type="hidden"]'),
-					_("p", _('label[for="sign"]', 'Signature :'), els.sign = _('canvas#sign', {
-						events: {
-							create: signCreate,
-							mousemove: signMouseMove
-						}
-					})),
+					_("p", _('label[for="sign"]', 'Signature :'), els.sign = (new SignCanvas(_(`canvas#sign`))).DOMelement),
 					_('input[value="Réserver" type="submit"]')
 				)
 			),
