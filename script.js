@@ -182,20 +182,20 @@ async function main() {
 				),
 				_('.carousel',
 					_('.slides',
-						_('#slide1.slide',
+						_('#slide1.slide.fas.fa-bicycle',
 							els.welcome_title = _('h3', `JCDecaux`),
 							els.welcome_sentence = _('p', `Bienvenu sur le site de réservation de vélo.`)
 						),
-						_('#slide2.slide',
+						_('#slide2.slide.fas.fa-map-marked-alt',
 							_('h3', 'Trouvez votre vélo'),
 							_('p', 'Aidez-vous de la carte afin de trouver la station de vélos la plus proche, cliquez sur le marqueur pour voir les details'),
 							_('a[href="#map"]', 'Voir la Carte')
 						),
-						_('#slide3.slide',
+						_('#slide3.slide.fas.fa-edit',
 							_('h3', 'Réservez le !'),
 							_('p', 'Mettez les details de la reservations dans le formulaire et signez !')
 						),
-						_('#slide4.slide',
+						_('#slide4.slide.fas.fa-receipt',
 							_('h3', 'Vérifiez votre réservation'),
 							_('p', 'Votre reservation est effectué, vous pouvez à tout moment voir le détail de vos reservations, (une seule reservation est acceptée pour le moment)'),
 							_('a[href="#booking"]', 'Voir vos réservations')

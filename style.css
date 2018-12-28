@@ -1,25 +1,20 @@
 :root {
-  --bg-neutral: #e1e2e1;
-  --fg-neutral: #000000;
-  --bg-neutral-light: #F5F5F6;
-  --fg-neutral-light: #000000;
-  --bg-neutral-dark: #F5F5F6;
-  --fg-neutral-dark: #000000;
-  --bg-main: #1e88e5;
-  --fg-main: #000000;
-  --bg-light: #6ab7ff;
-  --fg-light: #000000;
-  --bg-dark: #005cb2;
-  --fg-dark: #ffffff;
+  --neutralLightColor: #F5F5F6;
+  --neutralColor: #e1e2e1;
+  --neutralDarkColor: #d0d0d0;
+  --primaryColor: #039be5;
+  --primaryLightColor: #63ccff;
+  --primaryDarkColor: #006db3;
+  --secondaryColor: #673ab7;
+  --secondaryLightColor: #9a67ea;
+  --secondaryDarkColor: #320b86;
+  --neutralTextLightColor: #ffffff;
+  --neutralTextDarkColor: #000000;
+  --primaryTextColor: #212121;
+  --secondaryTextColor: #ce93d8;
   font-family: 'Roboto', sans-serif;
   scroll-behavior: smooth;
 }
-/*
-*:hover {
-	outline:red 1px dotted;
-	background:rgba(255,0,0,0.1);
-}
-*/
 body {
   margin: 0;
   height: 100vh;
@@ -27,7 +22,7 @@ body {
   flex-direction: column;
   overflow-x: hidden;
 }
-body .pager {
+body > .pager {
   width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -42,10 +37,10 @@ body .pager {
   grid-template-columns: 100vw 50vw;
   transition: all 1s;
 }
-body .pager::-webkit-scrollbar {
+body > .pager::-webkit-scrollbar {
   width: 0 !important;
 }
-body .pager .page {
+body > .pager .page {
   scroll-snap-align: center;
   display: flex;
   flex-direction: column;
@@ -53,19 +48,19 @@ body .pager .page {
   align-items: stretch;
   align-content: stretch;
 }
-body .pager #carousel {
+body > .pager #carousel {
   grid-area: carousel;
 }
-body .pager #carousel .carousel {
+body > .pager #carousel .carousel {
   flex-grow: 1;
 }
-body .pager #map {
+body > .pager #map {
   grid-area: map;
 }
-body .pager #map #mapid {
+body > .pager #map #mapid {
   flex-grow: 1;
 }
-body .pager #details {
+body > .pager #details {
   overflow: hidden;
   box-shadow: 2.5px 0 15px 2.5px rgba(0, 0, 0, 0.75);
   z-index: 550;
@@ -75,10 +70,10 @@ body .pager #details {
   left: 0;
   transition: all 0.5s;
 }
-body .pager #details.open {
+body > .pager #details.open {
   left: -50vw;
 }
-body .pager #booking {
+body > .pager #booking {
   grid-area: booking;
 }
 .multibar {
@@ -86,8 +81,8 @@ body .pager #booking {
   flex-wrap: wrap;
   align-items: center;
 }
-.multibar:before,
-.multibar:after {
+.multibar:after,
+.multibar:before {
   content: "";
   flex-grow: 1;
 }
@@ -101,24 +96,25 @@ header {
   position: relative;
   z-index: 500;
   padding: 1px 10px;
-  background: var(--bg-main);
-  color: var(--fg-main);
+  background: var(--primaryColor);
+  color: var(--neutralTextDarkColor);
   box-shadow: 0 2.5px 15px 2.5px rgba(0, 0, 0, 0.75);
 }
 header > * {
   margin: 10px;
 }
 header a {
-  color: var(--fg-main);
+  color: var(--neutralTextDarkColor);
 }
 canvas {
-  border: 1px solid silver;
+  border: 1px solid var(--neutralDarkColor);
 }
 #mapid {
   min-height: 50px;
 }
 .carousel {
   position: relative;
+  background: var(--neutralDarkColor);
 }
 .carousel .navigation {
   position: absolute;
@@ -126,6 +122,15 @@ canvas {
   width: 100%;
   display: flex;
   padding: 0;
+  text-shadow: 1px 1px 5px black;
+  color: white;
+}
+.carousel .navigation .active,
+.carousel .navigation .next,
+.carousel .navigation .pause,
+.carousel .navigation .play,
+.carousel .navigation .prev {
+  color: var(--primaryLightColor);
 }
 .carousel .navigation:after,
 .carousel .navigation:before {
@@ -140,31 +145,87 @@ canvas {
   justify-content: center;
   align-items: center;
 }
+.carousel .navigation .next,
+.carousel .navigation .prev {
+  font-size: 200%;
+}
 .carousel .navigation .prev {
   order: -1;
-  font-size: 150%;
 }
 .carousel .navigation .next {
   order: 1;
-  font-size: 150%;
 }
-.carousel .navigation .play,
-.carousel .navigation .pause {
+.carousel .navigation .pause,
+.carousel .navigation .play {
   order: 1;
 }
 .carousel .navigation .hidden {
   display: none;
 }
+.carousel .slides .slide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 1s;
+  position: absolute;
+  left: -100%;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+}
+.carousel .slides .slide:before {
+  z-index: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  font-size: 75vh;
+  color: var(--neutralColor);
+  justify-content: center;
+  align-items: center;
+}
+.carousel .slides .slide * {
+  position: relative;
+  z-index: 1;
+}
+.carousel .slides .slide h3 {
+  text-align: center;
+  font-size: 2em;
+}
+.carousel .slides .slide p {
+  text-align: justify;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.carousel .slides .slide a {
+  margin: 20px;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  background: var(--secondaryColor);
+  color: var(--neutralTextLightColor);
+}
+.carousel .slides .slide.active {
+  opacity: 100;
+  left: 0;
+}
+.carousel .slides .slide.active ~ * {
+  opacity: 0;
+  left: 100%;
+}
 .group0,
+.group100,
 .group25,
 .group50,
 .group75,
-.group100,
 .station0,
+.station100,
 .station25,
 .station50,
-.station75,
-.station100 {
+.station75 {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -177,33 +238,33 @@ canvas {
 .group0,
 .station0 {
   border-color: #c92026;
-  box-shadow: 0px 0px 20px 5px #c92026;
+  box-shadow: 0 0 20px 5px #c92026;
 }
 .group25,
 .station25 {
   border-color: #c96f20;
-  box-shadow: 0px 0px 20px 5px #c96f20;
+  box-shadow: 0 0 20px 5px #c96f20;
 }
 .group50,
 .station50 {
   border-color: #c9c420;
-  box-shadow: 0px 0px 20px 5px #c9c420;
+  box-shadow: 0 0 20px 5px #c9c420;
 }
 .group75,
 .station75 {
   border-color: #7ac920;
-  box-shadow: 0px 0px 20px 5px #7ac920;
+  box-shadow: 0 0 20px 5px #7ac920;
 }
 .group100,
 .station100 {
   border-color: #2097c4;
-  box-shadow: 0px 0px 20px 5px #2097c4;
+  box-shadow: 0 0 20px 5px #2097c4;
 }
 .station0,
+.station100,
 .station25,
 .station50,
-.station75,
-.station100 {
+.station75 {
   border-bottom-left-radius: 0;
   box-shadow: 1px 1px 10px black;
 }
@@ -217,7 +278,4 @@ canvas {
 /* On mouse-over, add a deeper shadow */
 .book:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-}
-.active {
-  background: yellow;
 }
