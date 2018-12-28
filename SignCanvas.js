@@ -1,9 +1,7 @@
 class SignCanvas {
 	constructor(element) {
-		this.signMove = this.signMove.bind(this);
-		this.getLocation = this.getLocation.bind(this);
-		this.signStart = this.signStart.bind(this);
-		this.signEnd = this.signEnd.bind(this);
+		for (let listener of ["signMove", "signStart", "signEnd"])
+			this[listener] = this[listener].bind(this)
 
 		this.mouseDown = false
 		this.DOMelement = element
