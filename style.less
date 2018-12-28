@@ -37,7 +37,7 @@ body {
 		display: grid;
 		grid-template: "carousel ." "map detail" "booking .";
 		grid-template-rows: 100vh 100vh 100vh;
-		grid-template-columns: 100vw 50vw;
+		grid-template-columns: 100vw 360px;
 		transition: all 1s;
 
 		&::-webkit-scrollbar {
@@ -78,10 +78,11 @@ body {
 			position: relative;
 			left: 0;
 			transition: all 0.5s;
+			form {padding:20px;overflow: hidden scroll;}
 		}
 
 		#details.open {
-			left: -50vw;
+			left: -360px;
 		}
 
 		#booking {
@@ -192,51 +193,55 @@ canvas {
 			display: none;
 		}
 	}
-
 	position: relative;
 	background: var(--neutralDarkColor);
+
 	.slides {
 		.slide {
-			position:relative;
-			display:flex;
+			position: relative;
+			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
+
 			&:before {
-				z-index:0;
-				position:absolute;
-				width:100%;
-				height:100%;
-				display:flex;
-				font-size:75vh;
-				color:var(--neutralColor);
+				z-index: 0;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				font-size: 75vh;
+				color: var(--neutralColor);
 				justify-content: center;
 				align-items: center;
 			}
-			*{
-				position:relative;
-				z-index:1;
+
+			* {
+				position: relative;
+				z-index: 1;
 				font-family: 'Roboto', sans-serif;
 			}
-			h3{
 
-				text-align:center;
-				font-size:2em;
+			h3 {
+				text-align: center;
+				font-size: 2em;
 			}
+
 			p {
-				text-align:justify;
-				max-width:600px;
-				margin:0 auto;
-				padding:20px;
+				text-align: justify;
+				max-width: 600px;
+				margin: 0 auto;
+				padding: 20px;
 				line-height: 2em;
 			}
+
 			a {
-				margin:20px;
-				padding:10px 15px;
+				margin: 20px;
+				padding: 10px 15px;
 				text-decoration: none;
-				border-radius:5px;
-				background:var(--secondaryColor);
-				color:var(--neutralTextLightColor);
+				border-radius: 5px;
+				background: var(--secondaryColor);
+				color: var(--neutralTextLightColor);
 			}
 			transition: all 1s;
 			position: absolute;
@@ -255,10 +260,38 @@ canvas {
 				}
 			}
 		}
-		#slide1{background:#81d4fa; &:before{color:lighten(#81d4fa, 10%);}}
-		#slide2{background:#f8bbd0; &:before{color:lighten(#f8bbd0, 10%);}}
-		#slide3{background:#a5d6a7; &:before{color:lighten(#a5d6a7, 10%);}}
-		#slide4{background:#ffe082; &:before{color:lighten(#ffe082, 10%);}}
+
+		#slide1 {
+			background: #81d4fa;
+
+			&:before {
+				color: lighten(#81d4fa, 10%);
+			}
+		}
+
+		#slide2 {
+			background: #f8bbd0;
+
+			&:before {
+				color: lighten(#f8bbd0, 10%);
+			}
+		}
+
+		#slide3 {
+			background: #a5d6a7;
+
+			&:before {
+				color: lighten(#a5d6a7, 10%);
+			}
+		}
+
+		#slide4 {
+			background: #ffe082;
+
+			&:before {
+				color: lighten(#ffe082, 10%);
+			}
+		}
 	}
 }
 
@@ -329,7 +362,48 @@ canvas {
 	transition: 0.3s;
 }
 /* On mouse-over, add a deeper shadow */
-
 .book:hover {
 	box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+
+// material form
+.group {
+	position: relative;
+	margin-top: 45px;
+}
+
+input {
+	font-size: 18px;
+	padding: 10px 10px 10px 5px;
+	display: block;
+	width: 300px;
+	border: none;
+	border-bottom: 1px solid #757575;
+}
+
+input:focus {
+	outline: none;
+}
+/* LABEL ======================================= */
+
+label {
+	color: #999;
+	font-size: 18px;
+	font-weight: normal;
+	position: absolute;
+	pointer-events: none;
+	left: 5px;
+	top: 10px;
+	transition: 0.2s ease all;
+	-moz-transition: 0.2s ease all;
+	-webkit-transition: 0.2s ease all;
+}
+/* active state */
+
+input:focus + label,
+input:valid + label {
+	top: -20px;
+	font-size: 14px;
+	color: #5264AE;
 }

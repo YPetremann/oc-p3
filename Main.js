@@ -87,22 +87,22 @@ class Main {
 							}
 						})
 					)),
-					els.detail_name = _('p', '...'),
-					_('p', 'Adresse : ', els.detail_address = _("span", "...")),
-					_('p', els.detail_size = _("span", "..."), " places"),
-					_('p', els.detail_current = _("span", "..."), " vélos disponibles"),
 					els.detail_form = _('form', {
 							events: {
 								submit: this.bookSubmit
 							}
 						},
+						els.detail_name = _('p.line', '...'),
+						_('p.line', 'Adresse : ', els.detail_address = _("span", "...")),
+						_('p.line', els.detail_size = _("span", "..."), " places"),
+						_('p.line', els.detail_current = _("span", "..."), " vélos disponibles"),
 						els.detail_city = _('input[name="city" type="hidden"]'),
 						els.detail_number = _('input[name="number" type="hidden"]'),
-						_("p", _('label[for="name"]', 'Nom :'), els.name = _('input#name[name="name" type="text"]')),
-						_("p", _('label[for="surname"]', 'Prénom :'), els.surname = _('input#surname[name="surname" type="text"]')),
+						_("p.group", els.name = _('input#name[name="name" type="text"]'), _('label[for="name"]', 'Nom :')),
+						_("p.group", els.surname = _('input#surname[name="surname" type="text"]'), _('label[for="surname"]', 'Prénom :')),
 						_('input[name="sign" type="hidden"]'),
-						_("p", _('label[for="sign"]', 'Signature :'), els.sign = (new SignCanvas(_(`canvas#sign`))).DOMelement),
-						_('input[value="Réserver" type="submit"]')
+						_("p.group", els.sign = (new SignCanvas(_(`canvas#sign`))).DOMelement, _('label[for="sign"]', 'Signature :')),
+						_("p.group",_('input[value="Réserver" type="submit"]'))
 					)
 				),
 				els.bookingsPage = _('section#booking.page',
@@ -161,15 +161,15 @@ class Main {
 		els.detail_number.value = "..."
 
 		var station = JSON.parse(await ajaxGET(baseUrl + "/stations/" + e.target.number + "?contract=" + contract.name + "&apiKey=" + apiKey))
-
-		//display station data & open pane
-		els.details.classList.toggle("open")
-		els.detail_name.textContent = station.name
-		els.detail_address.textContent = station.address
-		els.detail_size.textContent = station.bike_stands
-		els.detail_current.textContent = station.available_bikes
-		els.detail_city.value = contract.name
-		els.detail_number.value = station.number
+		if(station.status == "OPEN" && station.available_bikes > 0) {
+			els.details.classList.add("open")
+			els.detail_name.textContent = station.name
+			els.detail_address.textContent = station.address
+			els.detail_size.textContent = station.bike_stands
+			els.detail_current.textContent = station.available_bikes
+			els.detail_city.value = contract.name
+			els.detail_number.value = station.number
+		}
 	}
 	async bookSubmit(e) {
 		e.preventDefault()

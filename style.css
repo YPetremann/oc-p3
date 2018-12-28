@@ -34,7 +34,7 @@ body > .pager {
   display: grid;
   grid-template: "carousel ." "map detail" "booking .";
   grid-template-rows: 100vh 100vh 100vh;
-  grid-template-columns: 100vw 50vw;
+  grid-template-columns: 100vw 360px;
   transition: all 1s;
 }
 body > .pager::-webkit-scrollbar {
@@ -70,8 +70,12 @@ body > .pager #details {
   left: 0;
   transition: all 0.5s;
 }
+body > .pager #details form {
+  padding: 10px;
+  overflow: hidden scroll;
+}
 body > .pager #details.open {
-  left: -50vw;
+  left: -360px;
 }
 body > .pager #booking {
   grid-area: booking;
@@ -304,4 +308,39 @@ canvas {
 /* On mouse-over, add a deeper shadow */
 .book:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.group {
+  position: relative;
+  margin-top: 45px;
+}
+input {
+  font-size: 18px;
+  padding: 10px 10px 10px 5px;
+  display: block;
+  width: 300px;
+  border: none;
+  border-bottom: 1px solid #757575;
+}
+input:focus {
+  outline: none;
+}
+/* LABEL ======================================= */
+label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+/* active state */
+input:focus + label,
+input:valid + label {
+  top: -20px;
+  font-size: 14px;
+  color: #5264AE;
 }
