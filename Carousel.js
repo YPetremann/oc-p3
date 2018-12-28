@@ -17,6 +17,12 @@ class Carousel {
 
 		// attach event to DOMelements
 		for (let pager of this.pagers) pager.addEventListener("click", this.jump)
+		document.addEventListener("keydown", (e) => {
+			switch(e.key){
+				case "ArrowLeft":this.prev();break
+				case "ArrowRight":this.next();break
+			}
+		})
 		this._prev.addEventListener("click", this.prev)
 		this._next.addEventListener("click", this.next)
 		this._play.addEventListener("click", this.play)
