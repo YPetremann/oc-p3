@@ -4,7 +4,7 @@ var baseUrl = "https://api.jcdecaux.com/vls/v1"
 var contract = {}
 
 var els = {}
-var minute = 60*1000
+var minute = 60 * 1000
 
 async function highlightStation(e) {
 	//fetch station data
@@ -37,8 +37,7 @@ function clusterIcon(cluster) {
 		iconSize: [25, 25],
 		className: average < 2 ? "group0" : average < 4 ? "group25" : average < 6 ? "group50" : average < 8 ? "group75" : "group100",
 		html: `<b>${bike_available}</b>`
-	});
-	return
+	})
 }
 
 function bookSubmit(e) {
@@ -145,28 +144,28 @@ async function reloadMap(city) {
 }
 async function reloadBooking() {
 	els.bookings.innerHTML = ''
-	if(sessionStorage.getItem("number") && sessionStorage.getItem("city")){
+	if (sessionStorage.getItem("number") && sessionStorage.getItem("city")) {
 		var station = JSON.parse(await ajaxGET(`${baseUrl}/stations/${sessionStorage.getItem("number")}?contract=${sessionStorage.getItem("city")}&apiKey=${apiKey}`))
 		var timeElmt
-		var expire = Math.floor(new Date(sessionStorage.getItem("bookingexpire")).getTime()/1000)
+		var expire = Math.floor(new Date(sessionStorage.getItem("bookingexpire")).getTime() / 1000)
 		els.bookings.appendChild(
 			_(".book",
 				`Vélo réservé à la station ${station.name} par ${sessionStorage.getItem("name")} ${sessionStorage.getItem("surname")}`,
-				_("div","Temps restant : ",timeElmt = _("span.time"))
+				_("div", "Temps restant : ", timeElmt = _("span.time"))
 			)
 		)
 		clearInterval(els.int);
-		els.int = setInterval(function(){
-			let now = Math.floor(new Date().getTime()/1000)
+		els.int = setInterval(function() {
+			let now = Math.floor(new Date().getTime() / 1000)
 			let diff = expire - now;
-			if (diff <= 0){
+			if (diff <= 0) {
 				diff = 0
 				sessionStorage.removeItem("number")
 				reloadBooking()
 				clearInterval(els.int);
 			}
 			timeElmt.textContent = `${Math.floor(diff/60)}:${diff%60}`
-		},1000)
+		}, 1000)
 	}
 }
 var markers = []
