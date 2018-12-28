@@ -22,7 +22,7 @@ class Main {
 					_('header.multibar',
 						_('h2.left', 'Présentation'),
 						_('a.right.fas.fa-map-marked-alt[href="#map"]'),
-						_('a.right.fas.fa-ticket-alt[href="#booking"]')
+						_('a.right.fas.fa-receipt[href="#booking"]')
 					),
 					_('.carousel',
 						_('.slides',
@@ -71,7 +71,7 @@ class Main {
 								change: this.changemap
 							}
 						}, _('option[value]', `(Ville)`)),
-						_('a.right.fas.fa-ticket-alt[href="#booking"]'),
+						_('a.right.fas.fa-receipt[href="#booking"]'),
 						_('a.right.fas.fa-book[href="#carousel"]')
 					),
 					els.map = _('#mapid'),
