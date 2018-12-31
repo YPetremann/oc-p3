@@ -93,7 +93,9 @@ presentation:
 <!-- slide -->
 # Développeur Front-End
 
+* Etudes des fonctions utilisable des navigateurs
 * Intégration des fonctionnalité selon la maquette
 * Création des fonctionnalité à l'aide du Html / Js / Css
+* Validation sur les principaux navigateurs
 
 
