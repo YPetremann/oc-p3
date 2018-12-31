@@ -9,6 +9,7 @@ presentation:
 # OpenDeclic
 # Projet 2
 ## Concevoir une carte intéractive de location de vélos
+https://ypetremann.github.io/oc-p3/
 
 <!-- slide -->
 ## Présentation du support
