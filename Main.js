@@ -28,20 +28,20 @@ class Main {
 						_('.slides',
 							_('#slide1.slide.fas.fa-bicycle',
 								els.welcome_title = _('h3', `JCDecaux`),
-								els.welcome_sentence = _('p', `Bienvenu sur le site de réservation de vélo.`)
+								els.welcome_sentence = _('p', `Bienvenue sur le site de réservation de vélo.`)
 							),
 							_('#slide2.slide.fas.fa-map-marked-alt',
 								_('h3', 'Trouvez votre vélo'),
-								_('p', 'Aidez-vous de la carte afin de trouver la station de vélos la plus proche, cliquez sur le marqueur pour voir les details'),
+								_('p', 'Aidez-vous de la carte afin de trouver la station de vélos la plus proche, cliquez sur le marqueur pour voir les détails'),
 								_('a[href="#map"]', 'Voir la Carte')
 							),
 							_('#slide3.slide.fas.fa-edit',
 								_('h3', 'Réservez le !'),
-								_('p', 'Mettez les details de la reservations dans le formulaire et signez !')
+								_('p', 'Indiquez les détails de la réservation dans le formulaire et signez !')
 							),
 							_('#slide4.slide.fas.fa-receipt',
 								_('h3', 'Vérifiez votre réservation'),
-								_('p', 'Votre reservation est effectué, vous pouvez à tout moment voir le détail de vos reservations, (une seule reservation est acceptée pour le moment)'),
+								_('p', 'Votre réservation est effectuée, vous pouvez à tout moment voir le détail de vos réservations, (une seule réservation est acceptée pour le moment)'),
 								_('a[href="#booking"]', 'Voir vos réservations')
 							)
 						),
@@ -107,7 +107,7 @@ class Main {
 				),
 				els.bookingsPage = _('section#booking.page',
 					_('header.multibar',
-						_('h2.hidden', 'Reservations'),
+						_('h2.hidden', 'Réservations'),
 						_('a.right.fas.fa-book[href="#carousel"]'),
 						_('a.right.fas.fa-map-marked-alt[href="#map"]')
 					),
@@ -241,7 +241,7 @@ class Main {
 
 		// complete presentation from contract infos
 		els.welcome_title.textContent = `${contract.commercial_name}`
-		els.welcome_sentence.textContent = `Bienvenu sur le site de réservation de vélo pour ${contract.name}`
+		els.welcome_sentence.textContent = `Bienvenue sur le site de réservation de vélo pour ${contract.name}`
 
 		// get station list from contract name
 		var stations = JSON.parse(await ajaxGET(baseUrl + "/stations?contract=" + contract.name + "&apiKey=" + apiKey))
