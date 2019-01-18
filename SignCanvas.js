@@ -22,8 +22,8 @@ class SignCanvas {
 		let canvas = this.DOMelement
 		var bbox = canvas.getBoundingClientRect();
 		return {
-			x: e.clientX - bbox.left * (canvas.width / bbox.width),
-			y: e.clientY - bbox.top * (canvas.height / bbox.height)
+			x: (e.clientX - bbox.left) * (canvas.width  / bbox.width ),
+			y: (e.clientY - bbox.top ) * (canvas.height / bbox.height)
 		};
 	}
 	signStart() {
